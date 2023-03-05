@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -15,7 +19,9 @@ class AuthController extends Controller
 
     function registerView()
     {
-        return view("register");
+        return view("register", [
+            'title' => 'Register',
+        ]);
     }
 
     function doLogin(Request $request)
@@ -33,11 +39,11 @@ class AuthController extends Controller
             // validation failed redirect back to form
 
         } else {
-            if (\Auth::attempt($request->only(["email", "password"]))) {
+            if (Auth::attempt($request->only(["email", "password"]))) {
 
-                return redirect("dashboard")->with('success', 'Login Successful');
+                return redirect("Dashboard")->with('success', 'Berhasil Masuk');
             } else {
-                return back()->withErrors( "Invalid credentials");
+                return back()->withErrors( "Email dan Password Salah");
             }
         }
     }
@@ -59,23 +65,38 @@ class AuthController extends Controller
 
         } else {
 
+            // $password = Str::upper(Str::random(8));
             $User = new User;
             $User->name = $request->name;
+            $User->level = $request->level;
             $User->email = $request->email;
             $User->password = bcrypt($request->password);
             $User->save();
-
-            return redirect("login")->with('success', 'You have successfully registered, Login to access your dashboard');
+            
+            return redirect('/list-user');
         }
+    }
+
+    public function index()
+    {
+        // mengambil data dari table 
+    	// $users = DB::table('users')->get();
+        $user = user::all();
+ 
+    	// mengirim data ke view index
+    	return view('list-user',['users' => $user]);
     }
 
     function dashboard()
     {
-        return view("dashboard");
+        return view('dashboard', [
+            'title' => 'Dashboard',
+        ]);
     }
+
     function logout()
     {
-        \Auth::logout();
-        return redirect("login")->with('success', 'Logout successfully');;
+        Auth::logout();
+        return redirect("/")->with('success', 'Berhasil Keluar');;
     }
 }

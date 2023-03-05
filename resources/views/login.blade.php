@@ -1,81 +1,24 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layout.Login.login-lay');
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+@section('content')
+<form class="container py-4 h-100 shadow" style="background-color: #ffff; border-radius: 20px" method="post" action="{{ url('do-login') }}">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+    <img class="mb-4 mt-4" src="{{ asset('images/logodinas.png') }}" alt="logo" width="150" height="100">
 
-  <title>Readerstacks laravel 8 Custom login and registration </title>
+    <h1 class="h3 mb-3 fw-normal fw-bold" style="font-size: 16px">MASUK</h1>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" />
-  <script type="text/javascript" src="index.js"></script>
-  <style>
-    .error {
-      color: red
-    }
-  </style>
-</head>
+    @include('layout.Login.massages')
 
-<body class="antialiased">
-  <div class="container">
-    <!-- main app container -->
-    <div class="readersack">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 offset-md-3">
-            <h3>laravel 8 Custom Login  - Readerstacks</h3>
-            @if (\Session::has('success'))
-                <div class="alert alert-success">
-                    <ul>
-                        <li>{!! \Session::get('success') !!}</li>
-                    </ul>
-                </div>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <form method="post" id="handleAjax" action="{{url('do-login')}}" name="postform">
-              <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" value="{{old('email')}}"  class="form-control" />
-
-                
-                @csrf
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password"   class="form-control" />
-              </div>
-               
-              
-
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary">LOGIN</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+    <div class="form-group form-floating mb-3 mr-2" style="font-size: 16px;">
+        <input type="email" name="email" value="{{old('email')}}" class="form-control" />
+        <label for="floatingName">Masukan Email</label>
     </div>
-    <!-- credits -->
-    <div class="text-center">
-      <p>
-        <a href="#" target="_top">laravel 8 Custom login and registration  </a>
-      </p>
-      <p>
-        <a href="https://readerstacks.com" target="_top">readerstacks.com</a>
-      </p>
-    </div>
-  </div>
-    
-</body>
 
-</html>
+    <div class="form-group form-floating mb-3" style="font-size: 16px;">
+        <input type="password" name="password" class="form-control" />
+        <label for="floatingPassword">Masukan Password</label>
+    </div>
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit" style="background-color: #5e72e3; font-size: 16px;">Masuk</button>
+</form>
+@endsection
